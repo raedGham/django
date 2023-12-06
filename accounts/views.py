@@ -35,18 +35,19 @@ def register(request):
             user.save()
 
             # user activation
-            # current_site = get_current_site(request)
-            # mail_subject = "Please activate your account"
-            # message = render_to_string('accounts/account_verification_email.html', {
-            #     'user': user,
-            #     'domain': current_site,
-            #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            #     'token': default_token_generator.make_token(user),
+            current_site = get_current_site(request)
+            mail_subject = "Please activate your account"
+            message = render_to_string('accounts/account_verification_email.html', {
+                'request':request,
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
 
-            # })
-            # to_email = email
-            # send_email = EmailMessage(mail_subject, message, to=[to_email])
-            # send_email.send()
+            })
+            to_email = email
+            send_email = EmailMessage(mail_subject, message, to=[to_email])
+            send_email.send()
 
             # end activation
 
