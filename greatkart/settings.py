@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from django.contrib.messages import constants as messages
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -133,9 +134,16 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
     messages.ERROR: "danger",
-   
+
 }
+
+# configure email host  SMTP
+CSRF_COOKIE_DOMAIN = True
+EMAIL_HOST = "smtp.mail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "raed_ghamrawi@live.com"
+EMAIL_HOST_PASSWORD = "Lamipacker2011"
+EMAIL_USE_TLS = True
