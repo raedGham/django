@@ -3,7 +3,8 @@ from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from .forms import registrationForm
 from .models import Account
-
+from carts.models import Cart,CartItem
+from carts.views import _cart_id
 # verification email
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -69,8 +70,19 @@ def login(request):
         user = auth.authenticate(email=email, password=password)
 
         if user is not None:
+            try:
+              cart = Cart.objects.get(cart_id= _cart_id(request)) 
+              is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
+              if is_cart_item_exists:
+                  cart_item = CartItem.objects.filter(cart=cart)
+                  for item in cart_item:
+                      item.user = user
+                      item.save()
+
+            except:
+              pass    
             auth.login(request, user)
-            return redirect("home")
+            return redirect("dashboard")
         else:
             messages.error(request, 'Invalid login credentials')
 
@@ -84,4 +96,43 @@ def logout(request):
 
 
 def activate(request):
+    return
+
+@login_required
+def dashboard(request):
+    return render(request, 'accounts/dashboard.html')
+
+
+def forgetPassword(request):
+    if request.method == "POST":
+        email = request.POST['email']
+        print(email)
+        if Account.objects.filter(email=email).exists():
+            user = Account.objects.get(email__exact = email)
+
+            # user send email to user
+            current_site = get_current_site(request)
+            mail_subject = "Reset your password"
+            message = render_to_string('accounts/reset_password_email.html', {
+                'request':request,
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+
+            })
+            to_email = email
+            send_email = EmailMessage(mail_subject, message, to=[to_email])
+            send_email.send()
+            messages.success(request, "Password rest email has been sent to your email address")
+            return redirect("login")
+            # end send email
+        else:     
+             messages.error(request, "Account does not exists")
+             return redirect("forgetPassword")     
+        
+    return render(request, 'accounts/forgetPassword.html')
+
+
+def reset_password_validate(request):
     return
