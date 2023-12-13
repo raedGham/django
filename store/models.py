@@ -24,12 +24,15 @@ class Product(models.Model):
         return self.product_name
 
 
+
 class variationManager(models.Manager):
+# these functions are used to filter the variation model on size & color and are used in the product_details.html for color and size dropdowns
     def colors(self):
         return super(variationManager, self).filter(variation_category='color', is_active=True)
 
     def sizes(self):
         return super(variationManager, self).filter(variation_category='size', is_active=True)
+
 
 
 variation_category_choice = (

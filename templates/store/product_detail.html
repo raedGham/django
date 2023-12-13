@@ -31,8 +31,8 @@
                 <div class="item-option-select">
                   <h6>Choose Color</h6>
                   <select class="form-control" name="color" required>
-                    <option value="" selected>choose color</option>
-                    {% for i in single_product.variation_set.colors %}
+                    <option value="" selected required disabled>select</option>
+                    {% for i in single_product.variation_set.colors %} <!-- _set.colors comes from variation manger in the store.models -->
                     <option value="{{i.variation_value|lower}}">
                       {{i.variation_value|capfirst}}
                     </option>
@@ -44,9 +44,9 @@
               <!-- row.// -->
               <div class="row">
                 <div class="item-option-select">
-                  <h6>Size</h6>
+                  <h6>Choose Size</h6>
                   <select class="form-control" name="size" required>
-                    <option value="" selected>choose size</option>
+                    <option value="" selected required disabled>select</option>
                     {% for i in single_product.variation_set.sizes %}
                     <option value="{{i.variation_value| lower}}">
                       {{i.variation_value |capfirst}}
@@ -62,7 +62,7 @@
               {% if single_product.stock <= 0 %}
               <h5 class="text-danger">Out of Stock</h5>
               {% else %} 
-           
+               
               <button type="submit" class="btn btn-primary">
                 <span class="text">Add to cart</span>
                 <i class="fas fa-shopping-cart"></i>
