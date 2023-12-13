@@ -55,6 +55,9 @@ def add_cart(request, product_id):
             ex_var_list.append(list(existing_variation))
             id.append(item.id)
 
+        print(ex_var_list)
+        print(id)
+
         if product_variation in ex_var_list:
             index = ex_var_list.index(product_variation)
             item_id = id[index]
@@ -62,26 +65,26 @@ def add_cart(request, product_id):
             item.quantity += 1
             item.save()
         else:
-            cart_item = CartItem.objects.create(
+             item = CartItem.objects.create(
                 product=product,
                 quantity=1,
                 cart=cart,
-            )
-            if len(product_variation) > 0:
+                )
+             if len(product_variation) > 0:
                 item.variations.clear()
                 item.variations.add(*product_variation)
 
-            item.save()
+             item.save()
     else:
-        cart_item = CartItem.objects.create(
+         item =  cart_item = CartItem.objects.create(
             product=product,
             quantity=1,
             cart=cart,
         )
-        if len(product_variation) > 0:
+         if len(product_variation) > 0:
             cart_item.variations.clear()
             cart_item.variations.add(*product_variation)
-        cart_item.save()
+         cart_item.save()
     # return HttpResponse(product)
     # exit()
     return redirect('cart')
